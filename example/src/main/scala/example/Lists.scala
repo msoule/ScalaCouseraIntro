@@ -2,6 +2,8 @@ package example
 
 import common._
 
+import scala.NoSuchElementException
+
 object Lists {
   /**
    * This method computes the sum of all elements in the list xs. There are
@@ -23,12 +25,9 @@ object Lists {
    * @param xs A list of natural numbers
    * @return The sum of all elements in `xs`
    */
-  def sum(xs: List[Int]): Int = {
-    var sum: Int = 0
-    xs.foreach {
-      sum += _
-    }
-    sum
+  def sum(xs: List[Int]): Int = xs match{
+    case Nil => 0
+    case x :: tail => x + sum(tail)
   }
 
   /**
@@ -44,17 +43,20 @@ object Lists {
    * @return The largest element in `xs`
    * @throws java.util.NoSuchElementException if `xs` is an empty list
    */
-  def max(xs: List[Int]): Int = {
-    if(xs.isEmpty) {
-      throw new java.util.NoSuchElementException("Cannot find the max of an empty list.")
-    }
-    var max = xs.head
-    xs.foreach {x =>
-      if(x > max) {
-        max = x
+  def max(xs: List[Int]): Int = xs match{
+    case Nil => throw new NoSuchElementException("Cannot find the max of an empty list")
+    case x :: tail =>
+      if(tail.isEmpty) {
+        x
       }
-    }
-
-    max
+      else {
+        val y = max(tail)
+        if (x > y) {
+          x
+        }
+        else {
+          y
+        }
+      }
   }
 }
